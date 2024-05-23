@@ -34,8 +34,29 @@
 local tryefer = require 'treyfer'
 
 
+-- from string to table
+local function str2tbl(str)
+  local str = str
+  local t = {}
+  if type(str) == 'string' then
+    for i = 1, #str do
+      t[i - 1] = str:sub(i, i)
+    end
+  elseif type(str) == 'table' then
+    -- check if the table starts at '0'
+    local s = str[1] == nil and 1 or 0
+    for i = (1 - s), #str do
+      t[i] = str[i]
+    end
+  else
+    t = {}
+  end
+  return t
+end
+
+
 -- print a text using hex representation
-function printhex(txt)
+local function printhex(txt)
   local text = txt
   if type(text) == 'string' then  -- transform string into a table
     text = str2tbl(text)
@@ -48,27 +69,6 @@ function printhex(txt)
 end
 
 
--- from string to table
-function str2tbl(str)
-  local str = str
-  local t = {}
-  if type(str) == 'string' then
-    for i = 1, #str do
-      t[i - 1] = str:sub(i, i)
-    end
-  elseif type(str) == 'table' then
-    -- check if the table starts at '0'
-    local s = str[i] == nil and 1 or 0
-    for i = (1 - s), #str do
-      t[i] = str[i]
-    end
-  else
-    t = ''
-  end
-  return t
-end
-
-
 -- reference
 local text  = 'AAAAAAAA' --plain text
 local text2 = 'AAAAAAAA' --secondary plain text
@@ -77,18 +77,18 @@ local key   = 'AAAAAAAA' --key
 print('plaintext:..... ' .. printhex(text))
 print('key:........... ' .. printhex(key))
 
-text = treyfer.ref_encrypt(str2tbl(text), str2tbl(key))
+text = Treyfer.ref_encrypt(str2tbl(text), str2tbl(key))
 print('ref. encrypted: ' .. printhex(text))
 
-text2 = treyfer.encrypt(str2tbl(text2), str2tbl(key))
+text2 = Treyfer.encrypt(str2tbl(text2), str2tbl(key))
 print('encrypted:..... ' .. printhex(text2))
 
-text2 = treyfer.decrypt(text2, str2tbl(key))
+text2 = Treyfer.decrypt(text2, str2tbl(key))
 print('decrypted:..... ' .. printhex(text2))
 
 -- -[[ 
 -- padding to fill up to blocks whose lenght is modulo 8
-function padding(str)
+local function padding(str)
   if #str % 8 == 0 then
     str = str
   else
@@ -128,7 +128,7 @@ if inp ~= '' then
       tb[j - 1] = inptxt:sub(p + j, p + j)
     end
     -- encrypt the block
-    local t = treyfer.encrypt(tb, str2tbl(key))
+    local t = Treyfer.encrypt(tb, str2tbl(key))
     -- put the results into a table
     for i = 0, 7 do
       res[p + i] = t[i]
@@ -145,7 +145,7 @@ if inp ~= '' then
       tb[j] = res[(i - 1) * 8 + j]
     end
     -- decrypt the block
-    local t = treyfer.decrypt(tb, str2tbl(key))
+    local t = Treyfer.decrypt(tb, str2tbl(key))
     -- print the block
     for i = 0, 7 do
       io.write(t[i])

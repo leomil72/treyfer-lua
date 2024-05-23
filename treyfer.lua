@@ -1,11 +1,12 @@
 
-treyfer = {}
+Treyfer = {}
 
 local sbox = require 'sbox'
 local NUMROUNDS = 32 --number of rounds
 
+
 -- reference encryption
-function treyfer.ref_encrypt(txt, key)
+function Treyfer.ref_encrypt(txt, key)
   local txt = txt
   local key = key
   local t = string.byte(txt[0])
@@ -19,8 +20,9 @@ function treyfer.ref_encrypt(txt, key)
   return txt
 end
 
+
 -- encryption
-function treyfer.encrypt(txt, key)
+function Treyfer.encrypt(txt, key)
   local txt = txt
   local key = key
   local t = string.byte(txt[0])
@@ -37,7 +39,7 @@ end
 
 
 -- decryption
-function treyfer.decrypt(txt, key)
+function Treyfer.decrypt(txt, key)
   local txt = txt
   local key = key
   local top = 0
@@ -54,4 +56,4 @@ function treyfer.decrypt(txt, key)
   return txt
 end
 
-return treyfer
+return Treyfer
